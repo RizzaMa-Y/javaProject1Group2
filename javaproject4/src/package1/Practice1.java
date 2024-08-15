@@ -1,43 +1,41 @@
 package package1;
 
-import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel; 
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;  
-import javax.swing.event.ListSelectionListener;  
-import javax.swing.event.DocumentEvent;  
-import javax.swing.event.DocumentListener; 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.text.DocumentFilter;
 import javax.swing.JScrollPane;
-import javax.swing.table.TableRowSorter; 
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.JFrame; 
+import javax.swing.WindowConstants;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 //import net.proteanit.sql.DbUtils;
 public class Practice1 extends JInternalFrame {
@@ -45,7 +43,7 @@ public class Practice1 extends JInternalFrame {
 	Statement st1;
 	PreparedStatement pst1;
 	ResultSet rs1;
-	
+
 	private JTextField txtEmpID;
 	private JTextField txtFirst;
 	private JTextField txtMid;
@@ -65,17 +63,18 @@ public class Practice1 extends JInternalFrame {
 	private TableRowSorter sorter;
 	private HashMap<Integer, Integer> iDHolder;
 	private HashMap<Integer, String> wHName;
-	
+
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Practice1 frame = new Practice1();
 					frame.setVisible(true);
-										
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -87,7 +86,7 @@ public class Practice1 extends JInternalFrame {
 	 */
 	public Practice1() {
 		setClosable(true);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setSize(new Dimension(1132, 385));
 		setPreferredSize(new Dimension(1132, 385));
 		setMinimumSize(new Dimension(1132, 385));
@@ -95,108 +94,108 @@ public class Practice1 extends JInternalFrame {
 		setTitle("Employee Management");
 		setBounds(100, 100, 1132, 385);
 		getContentPane().setLayout(null);
-		
+
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Basic User Information", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel.setBounds(10, 12, 352, 264);
 		getContentPane().add(panel);
 		panel.setLayout(null);
-		
+
 		JLabel lblEmpId = new JLabel("Employee Id");
 		lblEmpId.setBounds(24, 29, 111, 22);
 		panel.add(lblEmpId);
 		lblEmpId.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		txtEmpID = new JTextField();
 		txtEmpID.setEditable(false);
 		txtEmpID.setBounds(145, 33, 179, 19);
 		panel.add(txtEmpID);
 		txtEmpID.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtEmpID.setColumns(10);
-		
-		txtEmpID.getDocument().addDocumentListener(new DocumentListener() {  
-            @Override  
-            public void insertUpdate(DocumentEvent e) {  
-                updateButtonState();  
-            }  
-  
-            @Override  
-            public void removeUpdate(DocumentEvent e) {  
-                updateButtonState();  
-            }  
-  
-            @Override  
-            public void changedUpdate(DocumentEvent e) {  
-                updateButtonState();  
-            }  
-  
-            private void updateButtonState() {  
+
+		txtEmpID.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateButtonState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateButtonState();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateButtonState();
+            }
+
+            private void updateButtonState() {
             	btnNewButton.setEnabled(txtEmpID.getText().isEmpty());
             	btnDelete.setEnabled(!txtEmpID.getText().isEmpty());
             	btnUpdateInformation.setEnabled(!txtEmpID.getText().isEmpty());
-            }  
-        });  
-		
+            }
+        });
+
 		JLabel lblEmpFirst = new JLabel("First Name");
 		lblEmpFirst.setBounds(24, 61, 111, 22);
 		panel.add(lblEmpFirst);
 		lblEmpFirst.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		txtFirst = new JTextField();
 		txtFirst.setBounds(145, 65, 179, 19);
 		panel.add(txtFirst);
 		txtFirst.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtFirst.setColumns(10);
-		
+
 		JLabel lblEmpMid = new JLabel("Middle Name");
 		lblEmpMid.setBounds(24, 93, 111, 22);
 		panel.add(lblEmpMid);
 		lblEmpMid.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		txtMid = new JTextField();
 		txtMid.setBounds(145, 97, 179, 19);
 		panel.add(txtMid);
 		txtMid.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtMid.setColumns(10);
-		
+
 		JLabel lblEMPLast = new JLabel("Last Name");
 		lblEMPLast.setBounds(24, 125, 111, 22);
 		panel.add(lblEMPLast);
 		lblEMPLast.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		txtLast = new JTextField();
 		txtLast.setBounds(145, 129, 179, 19);
 		panel.add(txtLast);
 		txtLast.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtLast.setColumns(10);
-		
+
 		JLabel lblEMPPosition = new JLabel("Position");
 		lblEMPPosition.setBounds(24, 157, 111, 22);
 		panel.add(lblEMPPosition);
 		lblEMPPosition.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		cboPosition = new JComboBox();
 		cboPosition.setModel(new DefaultComboBoxModel(new String[] {"Not Set", "Manager", "Forklift Driver", "Loader-Unloader", "Stocker", "Receiving Associate", "Package Handler", "Inventory Clerk", "Delivery Driver", "Safety Supervisor", "Security Supervisor"}));
 		cboPosition.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		cboPosition.setBounds(145, 160, 179, 21);
 		panel.add(cboPosition);
-		
+
 		JLabel lblEMPBranch = new JLabel("Branch Location");
 		lblEMPBranch.setBounds(24, 189, 111, 22);
 		panel.add(lblEMPBranch);
 		lblEMPBranch.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		cboBranch = new JComboBox();
 		cboBranch.setModel(new DefaultComboBoxModel(new String[] {"NCR", "Baguio", "Manila", "Cebu", "Davao"}));
 		cboBranch.setBounds(145, 192, 179, 21);
 		panel.add(cboBranch);
 		cboBranch.setFont(new Font("Century Gothic", Font.PLAIN, 12));
-		
+
 		JLabel lblEMPSalary = new JLabel("Salary");
 		lblEMPSalary.setBounds(24, 224, 111, 22);
 		panel.add(lblEMPSalary);
 		lblEMPSalary.setFont(new Font("Century Gothic", Font.BOLD, 13));
-		
+
 		txtSalary = new JTextField();
 		txtSalary.addKeyListener(new KeyAdapter() {
 			@Override
@@ -207,17 +206,18 @@ public class Practice1 extends JInternalFrame {
 				}
 			}
 		});
-		
+
 		txtSalary.setBounds(145, 228, 179, 19);
 		panel.add(txtSalary);
 		txtSalary.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtSalary.setColumns(10);
-		
+
 		btnNewButton = new JButton("Add New");
 		btnNewButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String fname,mname,lname,empposition,empbranch, empsalary;
-				
+
 				fname = txtFirst.getText().trim();
 				mname = txtMid.getText().trim();
 				lname = txtLast.getText().trim();
@@ -226,13 +226,13 @@ public class Practice1 extends JInternalFrame {
 				empsalary =  txtSalary.getText().trim();
 				int xSalary = Integer.parseInt(empsalary);
 				//int whId = iDHolder.get(cboWH.getSelectedIndex());
-				
+
 				if(fname.length() == 0 ||mname.length() == 0||lname.length() == 0||empsalary.length() == 0) {
 					JOptionPane.showMessageDialog(null,"Please provide information for the user","User creation",JOptionPane.INFORMATION_MESSAGE);
-					
+
 				}
 				else {
-				
+
 					try {
 						connect();
 						pst1 = con1.prepareStatement("INSERT INTO `employees` (`first_name`, `mid_name`, `last_name`, `position`, `branch`, `salary`) Values (?,?,?,?,?,?)");
@@ -244,35 +244,36 @@ public class Practice1 extends JInternalFrame {
 						pst1.setString(5,empbranch);
 						pst1.setInt(6,xSalary);
 						//pst1.setInt(7, whId);
-						
+
 						pst1.executeUpdate();
-						
+
 						pst1.close();
 						disconnect();
-						
+
 						JOptionPane.showMessageDialog(null,"New User Added!","Result",JOptionPane.INFORMATION_MESSAGE);
-						
+
 						clearEmpForm();
 						load_tbl();
-					
+
 					}catch(SQLException e2) {
 						e2.printStackTrace();
 					}
 				}
 			}
 		});
-		
+
 		btnNewButton.setFont(new Font("Century Gothic", Font.BOLD, 14));
 		btnNewButton.setBounds(37, 286, 121, 27);
 		getContentPane().add(btnNewButton);
-		
+
 		btnUpdateInformation = new JButton("Update");
 		btnUpdateInformation.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				//UPDATE
 				String empid, fname,mname,lname,empposition,empbranch, empsalary;
 				int EEid, xSalary;
-				
+
 				empid = txtEmpID.getText().trim();
 				EEid = Integer.parseInt(empid);
 				fname = txtFirst.getText().trim();
@@ -283,7 +284,7 @@ public class Practice1 extends JInternalFrame {
 				empsalary =  txtSalary.getText().trim();
 				xSalary = Integer.parseInt(empsalary);
 				//int whId = iDHolder.get(cboWH.getSelectedIndex());
-				
+
 				try {
 					connect();
 					pst1 = con1.prepareStatement("UPDATE `employees` SET "
@@ -303,18 +304,18 @@ public class Practice1 extends JInternalFrame {
 					pst1.setInt(6,xSalary);
 					//pst1.setInt(7,whId);
 					pst1.setInt(7,EEid);
-					
+
 					pst1.executeUpdate();
-					
+
 					pst1.close();
 					disconnect();
 
 					JOptionPane.showMessageDialog(null,"User Information Updated!","Result",JOptionPane.INFORMATION_MESSAGE);
-					
+
 					load_tbl();
 					clearEmpForm();
-					
-				
+
+
 				}catch(SQLException e2) {
 					e2.printStackTrace();
 				}
@@ -324,9 +325,10 @@ public class Practice1 extends JInternalFrame {
 		btnUpdateInformation.setFont(new Font("Century Gothic", Font.BOLD, 14));
 		btnUpdateInformation.setBounds(199, 286, 121, 27);
 		getContentPane().add(btnUpdateInformation);
-		
+
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				int n = JOptionPane.showConfirmDialog(
 				null, "Would you like delete this Staff?",
@@ -335,45 +337,45 @@ public class Practice1 extends JInternalFrame {
 					//DELETE
 					String empid;
 					int EEid;
-					
+
 					empid = txtEmpID.getText().trim();
 					EEid = Integer.parseInt(empid);
-					
+
 					try {
 						connect();
 						pst1 = con1.prepareStatement("DELETE FROM `employees`"
 								+" WHERE `employeeID`=?");
 						pst1.setInt(1,EEid);
-						
+
 						pst1.executeUpdate();
-						
+
 						pst1.close();
 						disconnect();
 
 						JOptionPane.showMessageDialog(null,"The User is Deleted from the list!","Result",JOptionPane.INFORMATION_MESSAGE);
-						
+
 						clearEmpForm();
 						load_tbl();
-					
+
 					}catch(SQLException e2) {
 						e2.printStackTrace();
 					}
 				}
-				
+
 			}
 		});
 		btnDelete.setEnabled(false);
 		btnDelete.setFont(new Font("Century Gothic", Font.BOLD, 14));
 		btnDelete.setBounds(37, 323, 121, 27);
 		getContentPane().add(btnDelete);
-		
-		
+
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Search Table", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_1.setBounds(372, 293, 734, 54);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		txtSearch = new JTextField();
 		txtSearch.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtSearch.setColumns(10);
@@ -400,35 +402,36 @@ public class Practice1 extends JInternalFrame {
 	            }
 	         }
 		});
-		
-		
-		
+
+
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(374, 10, 734, 274);
 		getContentPane().add(scrollPane);
-		
+
 		tableEMP = new JTable();
 		tableEMP.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {  
-                int selectedRow = tableEMP.getSelectedRow();  
-                if (selectedRow != -1) {  
-                	txtEmpID.setText((String) tableEMP.getValueAt(selectedRow, 0).toString());  
-                	txtFirst.setText((String) tableEMP.getValueAt(selectedRow, 1));  
-                	txtMid.setText((String) tableEMP.getValueAt(selectedRow, 2));  
-                	txtLast.setText((String) tableEMP.getValueAt(selectedRow, 3));  
-                	cboPosition.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 4));  
-                	cboBranch.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 5));  
-                	txtSalary.setText((String) tableEMP.getValueAt(selectedRow, 6).toString());  
-                	//cboWH.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 4));  
-                }  
+			public void mouseClicked(MouseEvent e) {
+                int selectedRow = tableEMP.getSelectedRow();
+                if (selectedRow != -1) {
+                	txtEmpID.setText(tableEMP.getValueAt(selectedRow, 0).toString());
+                	txtFirst.setText((String) tableEMP.getValueAt(selectedRow, 1));
+                	txtMid.setText((String) tableEMP.getValueAt(selectedRow, 2));
+                	txtLast.setText((String) tableEMP.getValueAt(selectedRow, 3));
+                	cboPosition.setSelectedItem(tableEMP.getValueAt(selectedRow, 4));
+                	cboBranch.setSelectedItem(tableEMP.getValueAt(selectedRow, 5));
+                	txtSalary.setText(tableEMP.getValueAt(selectedRow, 6).toString());
+                	//cboWH.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 4));
+                }
 			}
 		});
 
 		scrollPane.setViewportView(tableEMP);
-		
+
 		btnClear = new JButton("Clear");
 		btnClear.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearEmpForm();
 			}
@@ -439,7 +442,7 @@ public class Practice1 extends JInternalFrame {
 
 		load_tbl();
 		//loadWH();
-		
+
 	}
 	public void clearEmpForm() {
 		txtEmpID.setText("");
@@ -451,29 +454,29 @@ public class Practice1 extends JInternalFrame {
 		txtSalary.setText("");
 		txtFirst.requestFocus();
 		//cboWH.setSelectedIndex(0);
-		
+
 	}
-	
+
 	public void load_tbl() {
 		//reset table data
 		if(!(tableEMP.getModel().getRowCount() == 0)) {
-			DefaultTableModel modelx = (DefaultTableModel) tableEMP.getModel();  
-			modelx.setRowCount(0);  
+			DefaultTableModel modelx = (DefaultTableModel) tableEMP.getModel();
+			modelx.setRowCount(0);
 			System.out.print("Table reset data...");
 		}
-		
+
 		//add the table info and look
-		DefaultTableModel model = new DefaultTableModel();  
+		DefaultTableModel model = new DefaultTableModel();
 		//String[] columnNames = {"ID","First Name","Middle Name","Last Name","Position","Branch","Salary","Date Created"};
-		model.addColumn("ID");  
-        model.addColumn("First Name");  
+		model.addColumn("ID");
+        model.addColumn("First Name");
         model.addColumn("Middle Name");
         model.addColumn("Last Name");
         model.addColumn("Position");
         model.addColumn("Branch");
         model.addColumn("Salary");
         model.addColumn("Assigned Warehouse");
-        
+
 		try {
 			connect();
 			//Class.forName("net.proteanit.sql.DbUtils");
@@ -482,23 +485,23 @@ public class Practice1 extends JInternalFrame {
 			rs1 = st1.executeQuery("SELECT employeeID,first_name,mid_name,last_name,position"
 					+ ",branch,salary,created_date from employees");
 //			tableEMP.setModel(DbUtils.resultSetToTableModel(rs1));
-			while (rs1.next()) {  
-                Object[] row = new Object[8];  
-                row[0] = rs1.getInt("employeeID");  
-                row[1] = rs1.getString("first_name");  
-                row[2] = rs1.getString("mid_name");  
-                row[3] = rs1.getString("last_name");  
-                row[4] = rs1.getString("position");  
-                row[5] = rs1.getString("branch");  
-                row[6] = rs1.getInt("salary");  
-                row[7] = rs1.getString("created_date");  
-                
-                model.addRow(row);  
-            }  
+			while (rs1.next()) {
+                Object[] row = new Object[8];
+                row[0] = rs1.getInt("employeeID");
+                row[1] = rs1.getString("first_name");
+                row[2] = rs1.getString("mid_name");
+                row[3] = rs1.getString("last_name");
+                row[4] = rs1.getString("position");
+                row[5] = rs1.getString("branch");
+                row[6] = rs1.getInt("salary");
+                row[7] = rs1.getString("created_date");
+
+                model.addRow(row);
+            }
 			sorter = new TableRowSorter<>(model);
 			tableEMP.setModel(model);
 			tableEMP.setRowSorter(sorter);
-			
+
 			rs1.close();
 			st1.close();
 			disconnect();
@@ -506,24 +509,24 @@ public class Practice1 extends JInternalFrame {
 			e2.printStackTrace();
 		}
 	}
-	
+
 //	public void loadWH() {
 //		try {
 //			connect();
 //			iDHolder = new HashMap<>();
 //			wHName = new HashMap<>();
-//			
+//
 //			int a=1;
 //			st1 = con1.createStatement();
-//			
+//
 //			rs1 = st1.executeQuery("SELECT `warehouse_id`, `name`, `location`, `capacity`, `manager_id` FROM `warehouse`");
-//			
-//			while (rs1.next()) {  
+//
+//			while (rs1.next()) {
 //				int whID = rs1.getInt("warehouse_id");
 //				//cboWH.addItem(rs1.getString("name"));
 //				iDHolder.put(a, whID);
 //				wHName.put(whID, rs1.getString("name"));
-//				
+//
 //			}
 //			rs1.close();
 //			st1.close();
@@ -532,32 +535,32 @@ public class Practice1 extends JInternalFrame {
 //			System.out.print(e.toString());
 //		}
 //	}
-	
+
 	public void connect() {
 		try {
-			
+
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/pwcdb1","root","");
 			st1 = con1.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-			
+
 		}catch(ClassNotFoundException ex){
-			
+
 		}catch(Exception e){
 			System.out.print(e.toString());
 		}
 	}
-	
+
 	public void disconnect() {
-		
+
 		try {
-			
+
 			st1.close();
 			con1.close();
 			//JOptionPane.showMessageDialog(null, "Disconnected");
 		} catch (Exception e) {
 			System.out.print(e.toString());
-			
+
 		}
-		
+
 	}
 }
