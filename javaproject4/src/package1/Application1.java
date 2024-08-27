@@ -38,7 +38,6 @@ public class Application1 {
 	private JMenuItem mntmOrders;
 	private JMenu mnNewMenu_2;
 	private JMenuItem mntmLogNewOrder;
-	private JMenuItem mntmOrderStatus;
 	private Customers cus2;
 	private Orders or2;
 
@@ -88,37 +87,45 @@ public class Application1 {
 
 		mnNewMenu = new JMenu("Initial Actions");
 		menuBar.add(mnNewMenu);
-		//Warehouse
+		
+		//Warehouse - Practice2
 		Practice2 pr2 = new Practice2();
 		pr2.setSize(845, 335);
 		pr2.setLocation(10, 397);
 
-		//Employee
+		//Employee - Practice1
 		Practice1 pr1 = new Practice1();
 		pr1.setSize(1132, 385);
 		pr1.setLocation(10, 10);
 
-		//Warehouse
+		//Products
 		Products pro2 = new Products();
 		pro2.setSize(845, 390);
 		pro2.setLocation(10, 10);
-
-
+		
+		//Delivery
+		Delivery del2 = new Delivery();
+		del2.setSize(956, 395);
+		del2.setLocation(10, 10);
+		
+		//Orders
 		or2 = new Orders();
 		or2.setSize(842, 390);
 		or2.setLocation(470, 10);
 
+		//Customers
 		cus2 = new Customers(or2);
 		cus2.setSize(842, 450);
 		cus2.setLocation(10, 10);
 
 		///WINDOWSSS FRAME
 
-		//desktopPane.add(pr2);
-		//desktopPane.add(pr1);
-		//desktopPane.add(pro2);
+		desktopPane.add(pr2);
+		desktopPane.add(pr1);
+		desktopPane.add(pro2);
 		desktopPane.add(cus2);
 		desktopPane.add(or2);
+		desktopPane.add(del2);
 
 		mntmNewMenuItem = new JMenuItem("Employee Management");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
@@ -155,6 +162,13 @@ public class Application1 {
 		mnNewMenu_1.add(mntmProducts);
 
 		mntmOrders = new JMenuItem("Delivery Management");
+		mntmOrders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				del2.setVisible(true);
+				del2.toFront();
+				del2.load_tbl();
+			}
+		});
 		mnNewMenu_1.add(mntmOrders);
 
 		mnNewMenu_2 = new JMenu("Product Orders");
@@ -176,16 +190,6 @@ public class Application1 {
 			}
 		});
 		mnNewMenu_2.add(mntmLogNewOrder);
-
-		mntmOrderStatus = new JMenuItem("Check Order Status");
-		mntmOrderStatus.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//or2.setVisible(true);
-				//or2.toFront();
-			}
-		});
-		mnNewMenu_2.add(mntmOrderStatus);
 
 	}
 
