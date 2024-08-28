@@ -157,6 +157,7 @@ public class Application1 {
 			public void actionPerformed(ActionEvent e) {
 				pro2.setVisible(true);
 				pro2.toFront();
+				pro2.load_tbl();
 			}
 		});
 		mnNewMenu_1.add(mntmProducts);

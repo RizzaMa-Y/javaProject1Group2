@@ -63,6 +63,9 @@ public class Practice1 extends JInternalFrame {
 	private TableRowSorter sorter;
 	private HashMap<Integer, Integer> iDHolder;
 	private HashMap<Integer, String> wHName;
+	private JPanel panel_2;
+	private JButton btnCreateAccount;
+	private JButton btnDisable;
 
 	/**
 	 * Launch the application.
@@ -372,14 +375,14 @@ public class Practice1 extends JInternalFrame {
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Search Table", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(372, 293, 734, 54);
+		panel_1.setBounds(754, 293, 352, 54);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
 		txtSearch = new JTextField();
 		txtSearch.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtSearch.setColumns(10);
-		txtSearch.setBounds(23, 20, 701, 19);
+		txtSearch.setBounds(23, 20, 319, 22);
 		panel_1.add(txtSearch);
 		txtSearch.getDocument().addDocumentListener(new DocumentListener(){
 			@Override
@@ -414,6 +417,7 @@ public class Practice1 extends JInternalFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 int selectedRow = tableEMP.getSelectedRow();
+                String access;
                 if (selectedRow != -1) {
                 	txtEmpID.setText(tableEMP.getValueAt(selectedRow, 0).toString());
                 	txtFirst.setText((String) tableEMP.getValueAt(selectedRow, 1));
@@ -423,6 +427,15 @@ public class Practice1 extends JInternalFrame {
                 	cboBranch.setSelectedItem(tableEMP.getValueAt(selectedRow, 5));
                 	txtSalary.setText(tableEMP.getValueAt(selectedRow, 6).toString());
                 	//cboWH.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 4));
+                	access = (String) tableEMP.getValueAt(selectedRow, 8);
+                	System.out.println(access);
+                	if("With Access".equals(access)) {
+                		btnDisable.setEnabled(true);
+                		btnCreateAccount.setEnabled(false);
+                	}else {
+                		btnCreateAccount.setEnabled(true);
+                		btnDisable.setEnabled(false);
+                	}
                 }
 			}
 		});
@@ -439,6 +452,53 @@ public class Practice1 extends JInternalFrame {
 		btnClear.setFont(new Font("Century Gothic", Font.BOLD, 14));
 		btnClear.setBounds(199, 323, 121, 27);
 		getContentPane().add(btnClear);
+		
+		panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Account Credentials", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_2.setBounds(374, 293, 352, 54);
+		getContentPane().add(panel_2);
+		
+		btnCreateAccount = new JButton("Create account");
+		btnCreateAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnCreateAccount.setEnabled(false);
+		btnCreateAccount.setFont(new Font("Century Gothic", Font.BOLD, 14));
+		btnCreateAccount.setBounds(10, 17, 178, 27);
+		panel_2.add(btnCreateAccount);
+		
+		btnDisable = new JButton("Disable");
+		btnDisable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int EEid;
+					String empid;
+					empid = txtEmpID.getText().trim();
+					EEid = Integer.parseInt(empid);
+					connect();
+					pst1 = con1.prepareStatement("UPDATE `employees` SET "
+							+ " `isEnabled`=? "
+							+ " WHERE `employeeID`=?");
+					pst1.setInt(1,0);					
+					pst1.setInt(2,EEid);
+
+					pst1.executeUpdate();
+
+					pst1.close();
+					
+					disconnect();
+				} catch (SQLException e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		btnDisable.setEnabled(false);
+		btnDisable.setFont(new Font("Century Gothic", Font.BOLD, 14));
+		btnDisable.setBounds(198, 17, 144, 27);
+		panel_2.add(btnDisable);
 
 		load_tbl();
 		//loadWH();
@@ -475,18 +535,20 @@ public class Practice1 extends JInternalFrame {
         model.addColumn("Position");
         model.addColumn("Branch");
         model.addColumn("Salary");
-        model.addColumn("Assigned Warehouse");
+        model.addColumn("Created Date");
+        model.addColumn("Access");
 
 		try {
+			int accs = 0;
 			connect();
 			//Class.forName("net.proteanit.sql.DbUtils");
 			st1 = con1.createStatement();
 			//pst1 = con1.prepareStatement("SELECT * from employees");
 			rs1 = st1.executeQuery("SELECT employeeID,first_name,mid_name,last_name,position"
-					+ ",branch,salary,created_date from employees");
+					+ ",branch,salary,created_date,isEnabled from employees");
 //			tableEMP.setModel(DbUtils.resultSetToTableModel(rs1));
 			while (rs1.next()) {
-                Object[] row = new Object[8];
+                Object[] row = new Object[9];
                 row[0] = rs1.getInt("employeeID");
                 row[1] = rs1.getString("first_name");
                 row[2] = rs1.getString("mid_name");
@@ -495,7 +557,12 @@ public class Practice1 extends JInternalFrame {
                 row[5] = rs1.getString("branch");
                 row[6] = rs1.getInt("salary");
                 row[7] = rs1.getString("created_date");
-
+                accs = rs1.getInt("isEnabled");
+                if(accs == 0) {
+                	row[8] = "No Access";
+                }else {
+                	row[8] = "With Access";
+                }
                 model.addRow(row);
             }
 			sorter = new TableRowSorter<>(model);
