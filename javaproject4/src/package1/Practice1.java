@@ -91,6 +91,8 @@ public class Practice1 extends JInternalFrame {
 	 * @param credentials2 
 	 */
 	public Practice1(Credentials credentials) {
+		Practice1.credentials = credentials;
+		
 		setClosable(true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setSize(new Dimension(1132, 385));
@@ -467,7 +469,7 @@ public class Practice1 extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 				String empid;
 				empid = txtEmpID.getText().trim();
-				
+				credentials.xpractice1 = Practice1.this;
 				credentials.setVisible(true);
 				credentials.txtid.setText(empid);
 			}
@@ -480,26 +482,33 @@ public class Practice1 extends JInternalFrame {
 		btnDisable = new JButton("Disable");
 		btnDisable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int EEid;
-					String empid;
-					empid = txtEmpID.getText().trim();
-					EEid = Integer.parseInt(empid);
-					connect();
-					pst1 = con1.prepareStatement("UPDATE `employees` SET "
-							+ " `isEnabled`=? "
-							+ " WHERE `employeeID`=?");
-					pst1.setInt(1,0);					
-					pst1.setInt(2,EEid);
+				int n = JOptionPane.showConfirmDialog(null, "Disable employee credentials?",
+						"Product Item",JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					try {
+						int EEid;
+						String empid;
+						empid = txtEmpID.getText().trim();
+						EEid = Integer.parseInt(empid);
+						connect();
+						pst1 = con1.prepareStatement("UPDATE `employees` SET "
+								+ " `isEnabled`=? "
+								+ " WHERE `employeeID`=?");
+						pst1.setInt(1,0);					
+						pst1.setInt(2,EEid);
 
-					pst1.executeUpdate();
+						pst1.executeUpdate();
 
-					pst1.close();
-					
-					disconnect();
-				} catch (SQLException e2) {
-					// TODO: handle exception
+						pst1.close();
+						
+						disconnect();
+						load_tbl();
+					} catch (SQLException e2) {
+						// TODO: handle exception
+						e2.printStackTrace();
+					}
 				}
+				
 			}
 		});
 		btnDisable.setEnabled(false);
