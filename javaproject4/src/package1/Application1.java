@@ -22,7 +22,7 @@ import javax.swing.WindowConstants;
 //import net.proteanit.sql.DbUtils;
 
 public class Application1 {
-	public String userLevelx;
+	public static String userLevelx;
 	private JFrame frmApplication;
 	private final JDesktopPane desktopPane = new JDesktopPane();
 	private JMenuBar menuBar;
@@ -40,6 +40,12 @@ public class Application1 {
 	private JMenuItem mntmLogNewOrder;
 	private Customers cus2;
 	private Orders or2;
+	private Credentials cr1;
+	private Practice1 pr1;
+	private JMenu mnNewMenu_1;
+	private Products pro2;
+	private Delivery del2;
+	private Practice2 pr2;
 
 	/**
 	 * Launch the application.
@@ -52,7 +58,8 @@ public class Application1 {
 					Application1 window = new Application1();
 					window.frmApplication.setVisible(true);
 					System.out.print("System User Access is: " + userAccess);
-
+					userLevelx =userAccess;
+					window.userAccesss();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -86,25 +93,25 @@ public class Application1 {
 		frmApplication.setJMenuBar(menuBar);
 
 		mnNewMenu = new JMenu("Initial Actions");
-		menuBar.add(mnNewMenu);
 		
-		//Warehouse - Practice2
-		Practice2 pr2 = new Practice2();
+		
+		cr1 = new Credentials();
+		cr1.setSize(396, 212);
+		cr1.setLocation(10, 397);
+		
+		pr2 = new Practice2();
 		pr2.setSize(845, 335);
 		pr2.setLocation(10, 397);
 
-		//Employee - Practice1
-		Practice1 pr1 = new Practice1();
+		pr1 = new Practice1(cr1);
 		pr1.setSize(1132, 385);
 		pr1.setLocation(10, 10);
 
-		//Products
-		Products pro2 = new Products();
+		pro2 = new Products();
 		pro2.setSize(845, 390);
 		pro2.setLocation(10, 10);
 		
-		//Delivery
-		Delivery del2 = new Delivery();
+		del2 = new Delivery();
 		del2.setSize(956, 395);
 		del2.setLocation(10, 10);
 		
@@ -117,15 +124,7 @@ public class Application1 {
 		cus2 = new Customers(or2);
 		cus2.setSize(842, 450);
 		cus2.setLocation(10, 10);
-
-		///WINDOWSSS FRAME
-
-		desktopPane.add(pr2);
-		desktopPane.add(pr1);
-		desktopPane.add(pro2);
-		desktopPane.add(cus2);
-		desktopPane.add(or2);
-		desktopPane.add(del2);
+		
 
 		mntmNewMenuItem = new JMenuItem("Employee Management");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
@@ -144,13 +143,10 @@ public class Application1 {
 				pr2.toFront();
 			}
 		});
+		
 
-		mnNewMenu.add(mntmNewMenuItem);
-		mnNewMenu.add(mntmNewMenuItem_1);
-
-		JMenu mnNewMenu_1 = new JMenu("Inventory Management");
-		menuBar.add(mnNewMenu_1);
-
+		mnNewMenu_1 = new JMenu("Inventory Management");
+		
 		mntmProducts = new JMenuItem("Product Management");
 		mntmProducts.addActionListener(new ActionListener() {
 			@Override
@@ -160,7 +156,7 @@ public class Application1 {
 				pro2.load_tbl();
 			}
 		});
-		mnNewMenu_1.add(mntmProducts);
+		
 
 		mntmOrders = new JMenuItem("Delivery Management");
 		mntmOrders.addActionListener(new ActionListener() {
@@ -170,8 +166,6 @@ public class Application1 {
 				del2.load_tbl();
 			}
 		});
-		mnNewMenu_1.add(mntmOrders);
-
 		mnNewMenu_2 = new JMenu("Product Orders");
 		mnNewMenu_2.addActionListener(new ActionListener() {
 			@Override
@@ -180,7 +174,7 @@ public class Application1 {
 				cus2.toFront();
 			}
 		});
-		menuBar.add(mnNewMenu_2);
+
 
 		mntmLogNewOrder = new JMenuItem("New order");
 		mntmLogNewOrder.addActionListener(new ActionListener() {
@@ -190,8 +184,10 @@ public class Application1 {
 				cus2.toFront();
 			}
 		});
-		mnNewMenu_2.add(mntmLogNewOrder);
+		//menuBar.add(mnNewMenu);
+		
 
+		
 	}
 
 	public void connect() {
@@ -221,5 +217,37 @@ public class Application1 {
 
 	}
 
-
+	public void userAccesss() {
+		///WINDOWSSS FRAME
+		if("Super Admin".equals(userLevelx)) {
+			menuBar.add(mnNewMenu);
+			mnNewMenu.add(mntmNewMenuItem);
+			mnNewMenu.add(mntmNewMenuItem_1);
+			menuBar.add(mnNewMenu_1);
+			mnNewMenu_1.add(mntmProducts);
+			mnNewMenu_1.add(mntmOrders);
+			menuBar.add(mnNewMenu_2);
+			mnNewMenu_2.add(mntmLogNewOrder);
+			desktopPane.add(pr2);
+			desktopPane.add(pr1);
+			desktopPane.add(pro2);
+			desktopPane.add(cus2);
+			desktopPane.add(or2);
+			desktopPane.add(del2);
+			desktopPane.add(cr1);
+		}else {
+			menuBar.add(mnNewMenu_1);
+			mnNewMenu_1.add(mntmProducts);
+			mnNewMenu_1.add(mntmOrders);
+			menuBar.add(mnNewMenu_2);
+			mnNewMenu_2.add(mntmLogNewOrder);
+			desktopPane.add(pr2);
+			desktopPane.add(pr1);
+			desktopPane.add(pro2);
+			desktopPane.add(cus2);
+			desktopPane.add(or2);
+			desktopPane.add(del2);
+			desktopPane.add(cr1);
+		}
+	}
 }

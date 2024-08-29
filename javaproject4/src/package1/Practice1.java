@@ -43,6 +43,8 @@ public class Practice1 extends JInternalFrame {
 	Statement st1;
 	PreparedStatement pst1;
 	ResultSet rs1;
+	
+	private static Credentials credentials;
 
 	private JTextField txtEmpID;
 	private JTextField txtFirst;
@@ -75,7 +77,7 @@ public class Practice1 extends JInternalFrame {
 			@Override
 			public void run() {
 				try {
-					Practice1 frame = new Practice1();
+					Practice1 frame = new Practice1(credentials);
 					frame.setVisible(true);
 
 				} catch (Exception e) {
@@ -86,8 +88,9 @@ public class Practice1 extends JInternalFrame {
 	}
 	/**
 	 * Create the frame.
+	 * @param credentials2 
 	 */
-	public Practice1() {
+	public Practice1(Credentials credentials) {
 		setClosable(true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setSize(new Dimension(1132, 385));
@@ -428,7 +431,7 @@ public class Practice1 extends JInternalFrame {
                 	txtSalary.setText(tableEMP.getValueAt(selectedRow, 6).toString());
                 	//cboWH.setSelectedItem((String) tableEMP.getValueAt(selectedRow, 4));
                 	access = (String) tableEMP.getValueAt(selectedRow, 8);
-                	System.out.println(access);
+                	//System.out.println(access);
                 	if("With Access".equals(access)) {
                 		btnDisable.setEnabled(true);
                 		btnCreateAccount.setEnabled(false);
@@ -462,7 +465,11 @@ public class Practice1 extends JInternalFrame {
 		btnCreateAccount = new JButton("Create account");
 		btnCreateAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String empid;
+				empid = txtEmpID.getText().trim();
 				
+				credentials.setVisible(true);
+				credentials.txtid.setText(empid);
 			}
 		});
 		btnCreateAccount.setEnabled(false);
