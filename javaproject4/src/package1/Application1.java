@@ -25,37 +25,37 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class Application1 {
-	private static Application1 instance;
+	public static Application1 instance;
     public static String userLevelx;
     public JFrame frmApplication;
-    private BackgroundDesktopPane desktopPane;
-    private Image backgroundImage;
+    public BackgroundDesktopPane desktopPane;
+    public Image backgroundImage;
 
-    private JMenuBar menuBar;
-    private JMenuItem mntmNewMenuItem;
-    private JMenuItem mntmNewMenuItem_1;
+    public JMenuBar menuBar;
+    public JMenuItem mntmNewMenuItem;
+    public JMenuItem mntmNewMenuItem_1;
 
     Connection con;
     Statement st;
     PreparedStatement pst;
     ResultSet rs;
-    private JMenu mnNewMenu;
-    private JMenuItem mntmProducts;
-    private JMenuItem mntmOrders;
-    private JMenu mnNewMenu_2;
-    private JMenuItem mntmLogNewOrder;
-    private JMenuItem mntmUpdatePassword;
-    private Customers cus2;
-    private Orders or2;
-    private Credentials cr1;
-    private Practice1 pr1;
-    private JMenu mnNewMenu_1;
-    private Products pro2;
-    private Delivery del2;
-    private Practice2 pr2;
-	private JMenu logoutMenu;
-	private JMenuItem logoutMenuItem;
-	private JMenuItem updatePasswordItem;
+    public JMenu mnNewMenu;
+    public JMenuItem mntmProducts;
+    public JMenuItem mntmOrders;
+    public JMenu mnNewMenu_2;
+    public JMenuItem mntmLogNewOrder;
+    public JMenuItem mntmUpdatePassword;
+    public Customers cus2;
+    public Orders or2;
+    public Credentials cr1;
+    public Practice1 pr1;
+    public JMenu mnNewMenu_1;
+    public Products pro2;
+    public Delivery del2;
+    public Practice2 pr2;
+    public JMenu logoutMenu;
+    public JMenuItem logoutMenuItem;
+    public JMenuItem updatePasswordItem;
 
 	public static Application1 getInstance(String userLevel, int empId) {
         if (instance == null) {
@@ -77,7 +77,8 @@ public class Application1 {
                     
                     window.frmApplication.setVisible(true);
                     System.out.print("System User Access is: " + userAccess);
-                    //window.userAccesss();
+                    window.userAccesss();
+                    window.accountAccess();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -91,6 +92,7 @@ public class Application1 {
     public Application1(String userLevelx, int empID) {
         initialize(userLevelx,empID);
         // connect();
+        //userAccesss();
     }
 
     /**
@@ -233,13 +235,18 @@ public class Application1 {
                 logout();
             }
         });
-        
-        userAccesss();      
-        
-        
+	      desktopPane.add(pr2);
+	      desktopPane.add(pr1);
+	      desktopPane.add(pro2);
+	      desktopPane.add(cus2);
+	      desktopPane.add(or2);
+	      desktopPane.add(del2);
+	      desktopPane.add(cr1);
+	        
     }
     
     private void logout() {
+    	menuBar.removeAll();
     	hideAllInternalFrames();
         frmApplication.dispose();
         Login.main(null);
@@ -280,13 +287,13 @@ public class Application1 {
             mnNewMenu_1.add(mntmOrders);
             menuBar.add(mnNewMenu_2);
             mnNewMenu_2.add(mntmLogNewOrder);
-            desktopPane.add(pr2);
-            desktopPane.add(pr1);
-            desktopPane.add(pro2);
-            desktopPane.add(cus2);
-            desktopPane.add(or2);
-            desktopPane.add(del2);
-            desktopPane.add(cr1);
+//            desktopPane.add(pr2);
+//            desktopPane.add(pr1);
+//            desktopPane.add(pro2);
+//            desktopPane.add(cus2);
+//            desktopPane.add(or2);
+//            desktopPane.add(del2);
+//            desktopPane.add(cr1);
             
         } else {
             menuBar.add(mnNewMenu_1);
@@ -294,16 +301,19 @@ public class Application1 {
             mnNewMenu_1.add(mntmOrders);
             menuBar.add(mnNewMenu_2);
             mnNewMenu_2.add(mntmLogNewOrder);
-            desktopPane.add(pr2);
-            desktopPane.add(pr1);
-            desktopPane.add(pro2);
-            desktopPane.add(cus2);
-            desktopPane.add(or2);
-            desktopPane.add(del2);
-            desktopPane.add(cr1);
+//            desktopPane.add(pr2);
+//            desktopPane.add(pr1);
+//            desktopPane.add(pro2);
+//            desktopPane.add(cus2);
+//            desktopPane.add(or2);
+//            desktopPane.add(del2);
+//            desktopPane.add(cr1);
            
         }
-        menuBar.add(Box.createHorizontalGlue()); // Pushes the logout menu to the right
+        
+    }
+    public void accountAccess() {
+    	menuBar.add(Box.createHorizontalGlue()); // Pushes the logout menu to the right
         menuBar.add(logoutMenu);
         menuBar.add(updatePasswordItem);
         //updatePasswordItem.add(logoutMenuItem)

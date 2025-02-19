@@ -50,15 +50,15 @@ public class Practice2 extends JInternalFrame {
 	private JTextField txtCapacity;
 	private JPanel panel;
 	private JTable tableWH;
-	private JComboBox cboBranch;
+	private JComboBox<String> cboBranch;
 	private JButton btnNewButton;
 	private JButton btnUpdateInformation;
 	private JButton btnDelete;
 	private JButton btnClear;
-	private TableRowSorter sorter;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private HashMap<Integer, Integer> iDHolder;
 	private HashMap<Integer, String> ManagersName;
-	private JComboBox cboManager;
+	private JComboBox<String> cboManager;
 	private JTextField txtSearch;
 
 	/**
@@ -154,8 +154,8 @@ public class Practice2 extends JInternalFrame {
 		panel.add(lblEMPBranch);
 		lblEMPBranch.setFont(new Font("Century Gothic", Font.BOLD, 13));
 
-		cboBranch = new JComboBox();
-		cboBranch.setModel(new DefaultComboBoxModel(new String[] {"NCR", "Baguio", "Manila", "Cebu", "Davao"}));
+		cboBranch = new JComboBox<String>();
+		cboBranch.setModel(new DefaultComboBoxModel<String>(new String[] {"NCR", "Baguio", "Manila", "Cebu", "Davao"}));
 		cboBranch.setBounds(145, 128, 179, 21);
 		panel.add(cboBranch);
 		cboBranch.setFont(new Font("Century Gothic", Font.PLAIN, 12));
@@ -181,7 +181,7 @@ public class Practice2 extends JInternalFrame {
 		txtCapacity.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		txtCapacity.setColumns(10);
 
-		cboManager = new JComboBox();
+		cboManager = new JComboBox<String>();
 		cboManager.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		cboManager.setBounds(145, 96, 179, 21);
 		panel.add(cboManager);

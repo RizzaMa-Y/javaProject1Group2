@@ -158,6 +158,7 @@ public class Login{
 					UpdatePassword.main(empId,userAccess);
 				}else {
 					Application1.main(userAccess,empId);
+					//Application1.getInstance(userAccess,empId);
 				}
 				
             }

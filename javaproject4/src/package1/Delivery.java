@@ -54,7 +54,7 @@ public class Delivery extends JInternalFrame {
 	PreparedStatement pst1, pst2;
 	ResultSet rs1;
 	CallableStatement call1;
-	private TableRowSorter sorter;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private JTextField txtID;
 	private JTextField txtName;
 	private JTextField txtDeliveryDate;
@@ -66,6 +66,7 @@ public class Delivery extends JInternalFrame {
 	public int CurrentOrderID1;
 	
 	private int deliveryID;
+	private JComboBox<String> comboBox;
 	/**
 	 * Launch the application.
 	 */
@@ -141,14 +142,17 @@ public class Delivery extends JInternalFrame {
 		lblFilterByStatus.setBounds(248, 10, 111, 22);
 		panel.add(lblFilterByStatus);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"FOR PROCESSING", "DEPLOYED", "RECEIVED"}));
+		comboBox = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"","FOR PROCESSING", "DEPLOYED", "RECEIVED"}));
 		comboBox.setBounds(358, 13, 151, 19);
 		comboBox.addActionListener(new ActionListener() {  
             @Override  
-            public void actionPerformed(ActionEvent e) {  
+            public void actionPerformed(ActionEvent e) {
                 String selectedItem = (String) comboBox.getSelectedItem();  
                 System.out.println("combo: " +selectedItem);
+                clearForm();
+                load_tbl();
+                clearTableInfo();
                 search(selectedItem);  
             }  
             public void search(String str) {
@@ -172,7 +176,7 @@ public class Delivery extends JInternalFrame {
 		txtSearch.setColumns(10);
 		txtSearch.setBounds(624, 12, 272, 19);
 		txtSearch.getDocument().addDocumentListener(new DocumentListener(){
-			@Override
+			 @Override
 	         public void insertUpdate(DocumentEvent e) {
 	            search(txtSearch.getText());
 	         }
@@ -188,7 +192,10 @@ public class Delivery extends JInternalFrame {
 	            if (str.length() == 0) {
 	               sorter.setRowFilter(null);
 	            } else {
-	               sorter.setRowFilter(RowFilter.regexFilter(str));
+	            	load_tbl();
+	            	clearForm();
+	            	clearTableInfo();
+	            	sorter.setRowFilter(RowFilter.regexFilter(str));
 	            }
 	         }
 		});
@@ -221,7 +228,7 @@ public class Delivery extends JInternalFrame {
 		});
 		btnDeploy.setEnabled(false);
 		btnDeploy.setFont(new Font("Century Gothic", Font.BOLD, 14));
-		btnDeploy.setBounds(42, 317, 151, 27);
+		btnDeploy.setBounds(25, 317, 168, 27);
 		getContentPane().add(btnDeploy);
 		
 		JLabel lblDeliveryId = new JLabel("Delivery Id");
@@ -309,26 +316,17 @@ public class Delivery extends JInternalFrame {
 		//load_tbl();
 	}
 	public void load_tbl() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
-		if(!(table.getModel().getRowCount() == 0)) {
-			DefaultTableModel modelx = (DefaultTableModel) table.getModel();
-			modelx.setRowCount(0);
+		if(!(table.getModel().getRowCount() == 0)) {	
+			model.setRowCount(0);
 			System.out.print("Table reset data...");
 		}
 		
-		DefaultTableModel model = new DefaultTableModel();
-		model.addColumn("ID");
-        model.addColumn("Customer Name");
-        model.addColumn("Email");
-        model.addColumn("Contact No.");
-        model.addColumn("Address");
-        model.addColumn("Total Price");
-        model.addColumn("Order Date");
-        model.addColumn("Status");
-        model.addColumn("Shipped Date");
-        model.addColumn("Delivery Date");
-        model.addColumn("Order Ref");
-
+		model.setColumnIdentifiers(new Object[] {
+		        "ID", "Customer Name", "Email", "Contact No.", "Address", "Total Price", "Order Date", "Status", "Shipped Date", "Delivery Date", "Order Ref"
+		    });
+		
 		try {
 			connect();
 			rs1 = st1.executeQuery("SELECT a.delivery_id as 'id', a.shipped_date as 'shipDate', "
@@ -410,20 +408,18 @@ public class Delivery extends JInternalFrame {
 	
 	public void load_tbl_info() {
 		//reset table data
+		DefaultTableModel model = (DefaultTableModel) itemsTable.getModel();
 		if(!(itemsTable.getModel().getRowCount() == 0)) {
-			DefaultTableModel modelx = (DefaultTableModel) itemsTable.getModel();
-			modelx.setRowCount(0);
+			model.setRowCount(0);
 			System.out.print("\nTable reset orders data...");
 		}
 
+		
 		//add the table info and look
-		DefaultTableModel model = new DefaultTableModel();
-		model.addColumn("ID");
-        model.addColumn("QTY");
-        model.addColumn("Product Name");
-        model.addColumn("Price");
-        model.addColumn("Total Price");
-
+		model.setColumnIdentifiers(new Object[] {
+		        "ID", "QTY", "Product Name", "Price", "Total Price"
+		    });
+		
 		try {
 			connect();
 
@@ -457,7 +453,6 @@ public class Delivery extends JInternalFrame {
                 itemcnt = itemcnt + qtyitem;
                 totalAll = pricePerItem + totalAll;
                 model.addRow(row);
-
             }
 
 			sorter = new TableRowSorter<>(model);
@@ -471,6 +466,14 @@ public class Delivery extends JInternalFrame {
 		}catch(SQLException e2) {
 			e2.printStackTrace();
 		}
+	}
+	
+	public void clearTableInfo() {
+		DefaultTableModel model = (DefaultTableModel) itemsTable.getModel();
+		model.setRowCount(0);
+		model.setColumnIdentifiers(new Object[] {
+		        "ID", "QTY", "Product Name", "Price", "Total Price"
+		    });
 	}
 }
 

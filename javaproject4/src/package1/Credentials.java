@@ -33,7 +33,8 @@ public class Credentials extends JInternalFrame {
 	
 	public Practice1 xpractice1;
 	
-	JTextField txtid;
+	public JTextField txtid;
+	public String staffPosition;
 	private JTextField txtemail;
 	private JTextField txtUsername;
 	private JTextField txtTemppass;
@@ -114,7 +115,7 @@ public class Credentials extends JInternalFrame {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String empid,email,username,temppass;
-				int eeid;
+				int eeid,ulevel;
 				empid = txtid.getText().trim();
 				eeid = Integer.parseInt(empid);
 				
@@ -122,6 +123,11 @@ public class Credentials extends JInternalFrame {
 				username = txtUsername.getText().trim();
 				temppass = txtTemppass.getText().trim();
 				boolean check = EmailValidation.isValid(email);
+				ulevel = 2;
+				if(staffPosition.contains("Manager")) {
+					ulevel =1;
+				}
+				
 				if (check) {	
 					// Get the current date  
 			        LocalDate localDate = LocalDate.now();  
@@ -137,7 +143,7 @@ public class Credentials extends JInternalFrame {
 						pst1.setString(1,username);
 						pst1.setString(2,temppass);
 						pst1.setString(3,email);
-						pst1.setInt(4,1);
+						pst1.setInt(4,ulevel);
 						pst1.setDate(5, sqlDate);
 						pst1.setInt(6,1);
 						pst1.setInt(7,eeid);

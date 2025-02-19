@@ -352,10 +352,7 @@ public class Customers extends JInternalFrame {
 					try {
 						connect();
 						call1 = con1.prepareCall("{ CALL `cancelTransaction`(?)}");
-//						call1.setInt(1,itemorderID);
 						call1.setInt(1,CurrentOrderID);
-//						call1.setInt(2,itemoderqty);
-//						call1.setInt(3,itemoderProdID);
 
 						call1.execute();
 
@@ -385,28 +382,16 @@ public class Customers extends JInternalFrame {
 		panel_1_1.add(scrollPane_1);
 
 		tblOrderItems = new JTable();
-//		tblOrderItems.addContainerListener(new ContainerAdapter() {
-//			@Override
-//			public void componentAdded(ContainerEvent e) {
-//
-//			}
-//		});
 		tblOrderItems.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String itemtempid[];
                 int selectedRow = tblOrderItems.getSelectedRow();
-                //System.out.println("TESTrows:" + selectedRow);
                 if (selectedRow != -1) {
-//                	txtID.setText((String) tblOrderItems.getValueAt(selectedRow, 0).toString());
                 	itemorderID = ((int) tblOrderItems.getValueAt(selectedRow, 0));
                 	itemoderqty = ((int) tblOrderItems.getValueAt(selectedRow, 1));
                 	itemtempid = ((String) tblOrderItems.getValueAt(selectedRow, 2)).split("_");
-//                	txtName.setText((String) tblOrderItems.getValueAt(selectedRow, 1));
-//                	txtPhone.setText((String) tblOrderItems.getValueAt(selectedRow, 2).toString());
-//                	txtAddress.setText((String) tblOrderItems.getValueAt(selectedRow, 5));
-//
-                	//System.out.println(itemtempid[0]);
+
                 	itemoderProdID = Integer.parseInt(itemtempid[0]);
                 	btnCancelOrder.setEnabled(true);
                 	
@@ -443,15 +428,10 @@ public class Customers extends JInternalFrame {
 				"Product Item",JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
 					System.out.println("Item ID:" +itemorderID + "\nitem in bucket:" + itemoderqty);
-
 					try {
 						connect();
 						call1 = con1.prepareCall("{ CALL `cancelOrder`(?)}");
 						call1.setInt(1,itemorderID);
-//						call1.setInt(1,CurrentOrderID);
-//						call1.setInt(2,itemoderqty);
-//						call1.setInt(3,itemoderProdID);
-
 						call1.execute();
 
 						disconnect();

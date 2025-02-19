@@ -121,6 +121,7 @@ public class UpdatePassword {
                 Application1.getInstance(Userlevel,empID).frmApplication.toFront();
             } else {
                 Application1.main(Userlevel, empID);
+                //Application1.getInstance(Userlevel,empID);
             }
         } catch (Exception e) {
             e.printStackTrace();

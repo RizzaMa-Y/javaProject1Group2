@@ -53,7 +53,7 @@ public class Practice1 extends JInternalFrame {
 	private JTextField txtSalary;
 	private JPanel panel;
 	private JTable tableEMP;
-	private JComboBox cboBranch;
+	private JComboBox<String> cboBranch;
 	private JButton btnNewButton;
 	private JButton btnUpdateInformation;
 	private JButton btnDelete;
@@ -61,8 +61,8 @@ public class Practice1 extends JInternalFrame {
 	private String[] colNames = {"Employee Id", "First Name", "Middle Name", "Last Name", "Position", "Branch Location", "Salary"};
 	private JTextField txtSearch;
 	//private JButton btnSearch;
-	private JComboBox cboPosition;
-	private TableRowSorter sorter;
+	private JComboBox<String> cboPosition;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private HashMap<Integer, Integer> iDHolder;
 	private HashMap<Integer, String> wHName;
 	private JPanel panel_2;
@@ -182,8 +182,8 @@ public class Practice1 extends JInternalFrame {
 		panel.add(lblEMPPosition);
 		lblEMPPosition.setFont(new Font("Century Gothic", Font.BOLD, 13));
 
-		cboPosition = new JComboBox();
-		cboPosition.setModel(new DefaultComboBoxModel(new String[] {"Not Set", "Manager", "Forklift Driver", "Loader-Unloader", "Stocker", "Receiving Associate", "Package Handler", "Inventory Clerk", "Delivery Driver", "Safety Supervisor", "Security Supervisor"}));
+		cboPosition = new JComboBox<String>();
+		cboPosition.setModel(new DefaultComboBoxModel<String>(new String[] {"Not Set", "Manager", "Forklift Driver", "Loader-Unloader", "Stocker", "Receiving Associate", "Package Handler", "Inventory Clerk", "Delivery Driver", "Safety Supervisor", "Security Supervisor"}));
 		cboPosition.setFont(new Font("Century Gothic", Font.PLAIN, 12));
 		cboPosition.setBounds(145, 160, 179, 21);
 		panel.add(cboPosition);
@@ -193,8 +193,8 @@ public class Practice1 extends JInternalFrame {
 		panel.add(lblEMPBranch);
 		lblEMPBranch.setFont(new Font("Century Gothic", Font.BOLD, 13));
 
-		cboBranch = new JComboBox();
-		cboBranch.setModel(new DefaultComboBoxModel(new String[] {"NCR", "Baguio", "Manila", "Cebu", "Davao"}));
+		cboBranch = new JComboBox<String>();
+		cboBranch.setModel(new DefaultComboBoxModel<String>(new String[] {"NCR", "Baguio", "Manila", "Cebu", "Davao"}));
 		cboBranch.setBounds(145, 192, 179, 21);
 		panel.add(cboBranch);
 		cboBranch.setFont(new Font("Century Gothic", Font.PLAIN, 12));
@@ -467,11 +467,14 @@ public class Practice1 extends JInternalFrame {
 		btnCreateAccount = new JButton("Create account");
 		btnCreateAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String empid;
+				String empid,pos;
 				empid = txtEmpID.getText().trim();
+				pos = (String) cboPosition.getSelectedItem();  
 				credentials.xpractice1 = Practice1.this;
 				credentials.setVisible(true);
 				credentials.txtid.setText(empid);
+				credentials.staffPosition = pos;
+				System.out.println(pos);
 			}
 		});
 		btnCreateAccount.setEnabled(false);

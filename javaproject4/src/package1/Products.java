@@ -55,7 +55,7 @@ public class Products extends JInternalFrame {
 	private JTextField textSearch;
 	private JTextArea txtDesc;
 	private JTable tblProduct;
-	private TableRowSorter sorter;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private JTextField txtQty;
 	private HashMap<Integer, Integer> iDHolder;
 	private HashMap<Integer, String> warehouseName;
