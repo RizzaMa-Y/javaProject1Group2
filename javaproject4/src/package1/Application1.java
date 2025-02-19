@@ -13,21 +13,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.swing.Box;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 
 public class Application1 {
+	private static Application1 instance;
     public static String userLevelx;
-    private JFrame frmApplication;
+    public JFrame frmApplication;
     private BackgroundDesktopPane desktopPane;
     private Image backgroundImage;
 
@@ -44,6 +44,7 @@ public class Application1 {
     private JMenuItem mntmOrders;
     private JMenu mnNewMenu_2;
     private JMenuItem mntmLogNewOrder;
+    private JMenuItem mntmUpdatePassword;
     private Customers cus2;
     private Orders or2;
     private Credentials cr1;
@@ -52,20 +53,31 @@ public class Application1 {
     private Products pro2;
     private Delivery del2;
     private Practice2 pr2;
+	private JMenu logoutMenu;
+	private JMenuItem logoutMenuItem;
+	private JMenuItem updatePasswordItem;
 
+	public static Application1 getInstance(String userLevel, int empId) {
+        if (instance == null) {
+            instance = new Application1(userLevel,empId);
+        }
+        return instance;
+    }
     /**
      * Launch the application.
      */
-    public static void main(String userAccess) {
+    public static void main(String userAccess,int empID) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Application1 window = new Application1();
+                	userLevelx = userAccess;
+//                    Application1 window = new Application1(userLevelx,empID);
+                    Application1 window = Application1.getInstance(userAccess,empID);
+                    
                     window.frmApplication.setVisible(true);
                     System.out.print("System User Access is: " + userAccess);
-                    userLevelx = userAccess;
-                    window.userAccesss();
+                    //window.userAccesss();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -76,15 +88,15 @@ public class Application1 {
     /**
      * Create the application.
      */
-    public Application1() {
-        initialize();
+    public Application1(String userLevelx, int empID) {
+        initialize(userLevelx,empID);
         // connect();
     }
 
     /**
      * Initialize the contents of the frame.
      */
-    private void initialize() {
+    private void initialize(String userLevelx,int empID) {
         frmApplication = new JFrame();
         frmApplication.setExtendedState(Frame.MAXIMIZED_BOTH);
         frmApplication.setTitle("Welcome to the ABZ Warehouse Management System");
@@ -194,8 +206,49 @@ public class Application1 {
                 cus2.toFront();
             }
         });
+        
+        mnNewMenu_1 = new JMenu("Inventory Management");
+        mntmUpdatePassword = new JMenuItem("New order");
+        mntmUpdatePassword.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cus2.setVisible(true);
+                cus2.toFront();
+            }
+        });
+        
+        logoutMenu = new JMenu("Account");
+        updatePasswordItem = new JMenuItem("Update Password");
+        updatePasswordItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	UpdatePassword.main(empID,userLevelx);
+            }
+        });
+        
+        logoutMenuItem = new JMenuItem("Logout");
+        logoutMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logout();
+            }
+        });
+        
+        userAccesss();      
+        
+        
     }
-
+    
+    private void logout() {
+    	hideAllInternalFrames();
+        frmApplication.dispose();
+        Login.main(null);
+    }
+    public void hideAllInternalFrames() {
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            frame.setVisible(false);
+        }
+    }
     public void connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -234,6 +287,7 @@ public class Application1 {
             desktopPane.add(or2);
             desktopPane.add(del2);
             desktopPane.add(cr1);
+            
         } else {
             menuBar.add(mnNewMenu_1);
             mnNewMenu_1.add(mntmProducts);
@@ -247,7 +301,14 @@ public class Application1 {
             desktopPane.add(or2);
             desktopPane.add(del2);
             desktopPane.add(cr1);
+           
         }
+        menuBar.add(Box.createHorizontalGlue()); // Pushes the logout menu to the right
+        menuBar.add(logoutMenu);
+        menuBar.add(updatePasswordItem);
+        //updatePasswordItem.add(logoutMenuItem)
+        logoutMenu.add(updatePasswordItem);
+        logoutMenu.add(logoutMenuItem);
     }
 }
 

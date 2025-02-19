@@ -149,7 +149,8 @@ public class Credentials extends JInternalFrame {
 						JOptionPane.showMessageDialog(null,"The user credential is created!","Result",JOptionPane.INFORMATION_MESSAGE);
 						clearform();
 						xpractice1.load_tbl();
-						dispose();
+//						dispose();
+						hide();
 					} catch (SQLException e2) {
 						// TODO: handle exception
 						e2.printStackTrace();

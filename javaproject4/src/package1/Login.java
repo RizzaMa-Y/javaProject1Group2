@@ -29,13 +29,13 @@ public class Login{
 	PreparedStatement pst1;
 	ResultSet rs1;
 
-	private JFrame frame;
-	private JPanel panel;
-	private JLabel lblNewLabel;
-	private JLabel lblPassword;
-	private JTextField textUsername;
-	private JTextField passwordField;
-	private Application1 app1;
+	public JFrame frame;
+	public JPanel panel;
+	public JLabel lblNewLabel;
+	public JLabel lblPassword;
+	public JTextField textUsername;
+	public JTextField passwordField;
+	public Application1 app1;
 
 	/**
 	 * Launch the application.
@@ -59,7 +59,7 @@ public class Login{
 	 * Create the frame.
 	 */
 	public Login() {
-		app1 = new Application1();
+		app1 = new Application1(null,0);
 		frame = new JFrame();
 		frame.setTitle("Login Form");
 		frame.setResizable(false);
@@ -116,8 +116,6 @@ public class Login{
 		lblForgot.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//panel.hide();
-				//frame.dispose();
 				JOptionPane.showMessageDialog(null,"Please contact your admin for credentials","Login",JOptionPane.INFORMATION_MESSAGE);
 
 			}
@@ -129,14 +127,14 @@ public class Login{
 	public void login() {
 		String userName, Password,userAccess = null;
 
-		int userLevel;
+		int userLevel, updatePassword,empId;
 		userName = textUsername.getText();
 		Password = passwordField.getText();
 
 		try {
 			connect();
 			pst1 = con1.prepareStatement("SELECT employeeID,first_name,mid_name,last_name,position"
-					+ ",branch,salary,created_date,userlevel from employees where username=? and password=?");
+					+ ",branch,salary,created_date,userlevel,passwordUpdate from employees where username=? and password=?");
 			pst1.setString(1,userName);
 			pst1.setString(2,Password);
 			rs1 = pst1.executeQuery();
@@ -144,7 +142,10 @@ public class Login{
 			if(rs1.next()){
 				JOptionPane.showMessageDialog(null,"Welcome " + rs1.getString("first_name") +"!","Login Success",JOptionPane.INFORMATION_MESSAGE);
 				frame.dispose();
+				updatePassword = rs1.getInt("passwordUpdate");
 				userLevel = rs1.getInt("userlevel");
+				empId = rs1.getInt("employeeID");
+				//assign user level
 				if(userLevel == 0) {
 					userAccess = "Super Admin";
 				}else if(userLevel == 1){
@@ -152,8 +153,12 @@ public class Login{
 				}else if(userLevel == 2){
 					userAccess = "User";
 				}
-
-				Application1.main(userAccess);
+				//check if password needs update
+				if(updatePassword ==0) {
+					UpdatePassword.main(empId,userAccess);
+				}else {
+					Application1.main(userAccess,empId);
+				}
 				
             }
             else{
@@ -185,7 +190,6 @@ public class Login{
 
 			st1.close();
 			con1.close();
-			//JOptionPane.showMessageDialog(null, "Disconnected");
 		} catch (Exception e) {
 			System.out.print(e.toString());
 
