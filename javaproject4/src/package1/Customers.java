@@ -619,7 +619,7 @@ public class Customers extends JInternalFrame {
                 row[2] = pName;
                 row[3] = priceDisplay;
                 row[4] = totalPriceDisp;
-                itemcnt = itemcnt + 1;
+                itemcnt = itemcnt + qtyitem;
                 totalAll = pricePerItem + totalAll;
                 model.addRow(row);
 

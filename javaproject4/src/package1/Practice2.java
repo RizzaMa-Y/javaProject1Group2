@@ -206,9 +206,10 @@ public class Practice2 extends JInternalFrame {
 				else {
 
 					try {
+						
 						connect();
 						pst1 = con1.prepareStatement("INSERT INTO `warehouse`( `name`, `location`, `capacity`, `manager_id`) "
-																	+ "Values (?,?,?,?)");
+													+ "Values (?,?,?,?)");
 						pst1.setString(1,whname);
 						pst1.setString(2,branch);
 						pst1.setInt(3,xCapacity);

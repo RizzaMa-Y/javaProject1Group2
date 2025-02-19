@@ -63,6 +63,7 @@ public class Delivery extends JInternalFrame {
 	private JTable itemsTable;
 	private JButton btnDeploy;
 	private JButton btnReceived;
+	public int CurrentOrderID1;
 	
 	private int deliveryID;
 	/**
@@ -114,8 +115,11 @@ public class Delivery extends JInternalFrame {
                 	txtName.setText((String) table.getValueAt(selectedRow, 1));
                 	txtDeliveryDate.setText((String) table.getValueAt(selectedRow, 8).toString());
                 	txtArivalDate.setText((String) table.getValueAt(selectedRow, 9).toString());
-                	
+                	CurrentOrderID1 = ((int) table.getValueAt(selectedRow, 10));
                 	stat = ((String) table.getValueAt(selectedRow, 7).toString());
+                	
+                	load_tbl_info();
+                	
                 	if("FOR PROCESSING".equals(stat)) {
                 		btnDeploy.setEnabled(true);
                 		btnReceived.setEnabled(false);
@@ -323,6 +327,7 @@ public class Delivery extends JInternalFrame {
         model.addColumn("Status");
         model.addColumn("Shipped Date");
         model.addColumn("Delivery Date");
+        model.addColumn("Order Ref");
 
 		try {
 			connect();
@@ -330,7 +335,7 @@ public class Delivery extends JInternalFrame {
 					+ " a.delivery_date as 'deliveryDate',"
 					+ " a.status as 'stat', b.order_date as 'orderdate', b.customer_id as 'customerReference',"
 					+ " c.name as 'name',c.email as 'email', c.phone as 'phone', c.address as 'address',"
-					+ " b.total_amount as 'totalamount' "
+					+ " b.total_amount as 'totalamount', b.order_id as 'orderReference' "
 					+ " FROM deliveries as a join orders as b join customers as c WHERE "
 					+ " a.order_id = b.order_id and b.customer_id = c.customer_id;");
 			while (rs1.next()) {
@@ -338,7 +343,7 @@ public class Delivery extends JInternalFrame {
 				double price;
 				price = rs1.getInt("totalamount");
 				prx = String.format("%,.2f",price);
-                Object[] row = new Object[10]; 
+                Object[] row = new Object[11]; 
                 row[0] = rs1.getInt("id");
                 row[1] = rs1.getString("name");
                 row[2] = rs1.getString("email");
@@ -349,7 +354,7 @@ public class Delivery extends JInternalFrame {
                 row[7] = rs1.getString("stat");
                 row[8] = rs1.getDate("shipDate");
                 row[9] = rs1.getDate("deliveryDate");
- 
+                row[10] = rs1.getInt("orderReference");
                 model.addRow(row);
             }
 			sorter = new TableRowSorter<>(model);
@@ -401,4 +406,71 @@ public class Delivery extends JInternalFrame {
 		txtArivalDate.setText("");
 		txtDeliveryDate.setText("");
 	}
+	
+	
+	public void load_tbl_info() {
+		//reset table data
+		if(!(itemsTable.getModel().getRowCount() == 0)) {
+			DefaultTableModel modelx = (DefaultTableModel) itemsTable.getModel();
+			modelx.setRowCount(0);
+			System.out.print("\nTable reset orders data...");
+		}
+
+		//add the table info and look
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("ID");
+        model.addColumn("QTY");
+        model.addColumn("Product Name");
+        model.addColumn("Price");
+        model.addColumn("Total Price");
+
+		try {
+			connect();
+
+			pst1 = con1.prepareStatement("SELECT o.*, p.name as `ProductName`, p.price as `ProductPrice` FROM `orderitems` as `o` "
+					+ "join `products` as `p` where o.order_id=? and p.product_id = o.product_id");
+			pst1.setInt(1,CurrentOrderID1);
+			rs1 = pst1.executeQuery();
+
+			int itemcnt = 0;
+			double totalAll = 0.00;
+			while (rs1.next()) {
+                Double pricePerItem = rs1.getDouble("Price");
+
+                int iOid,qtyitem;
+                double iPerPrice;
+                String pName,priceDisplay,totalPriceDisp;
+
+                iOid = rs1.getInt("order_item_id");
+                pName = rs1.getString("product_id") + "_"+ rs1.getString("ProductName");
+                iPerPrice= rs1.getInt("ProductPrice");
+                qtyitem = rs1.getInt("quantity");
+
+                priceDisplay = String.format("%,.2f",iPerPrice);
+                totalPriceDisp = String.format("%,.2f",pricePerItem);
+                Object[] row = new Object[5];
+                row[0] = iOid;
+                row[1] = qtyitem;
+                row[2] = pName;
+                row[3] = priceDisplay;
+                row[4] = totalPriceDisp;
+                itemcnt = itemcnt + qtyitem;
+                totalAll = pricePerItem + totalAll;
+                model.addRow(row);
+
+            }
+
+			sorter = new TableRowSorter<>(model);
+			itemsTable.setModel(model);
+			itemsTable.setRowSorter(sorter);
+
+			rs1.close();
+			st1.close();
+			disconnect();
+			
+		}catch(SQLException e2) {
+			e2.printStackTrace();
+		}
+	}
 }
+
